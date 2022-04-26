@@ -1,0 +1,40 @@
+<html>
+<body>
+<script type="module">
+
+import { client } from "@sigmacomputing/plugin";
+
+client.config.configureEditorPanel([
+  { name: "source", type: "element" },
+  { name: "a column", type: "column", source: "source" },
+]);
+
+
+var latestData = [];
+
+var removeDataSubscription = () => {};
+client.config.subscribe((newconfig) => {
+  console.log("config:", newconfig);
+
+  removeDataSubscription();
+  removeDataSubscription = client.elements.subscribeToElementData(newconfig.source, (sigmaData) => {
+    console.log("config:", client.config.get());
+    console.log("sigmaData:", sigmaData);
+
+    setTimeout(() => {
+      console.log("changing visualization");
+      document.querySelector("#my-plugin-content").innerText = "Got data!";
+    }, 5000);
+  });
+});
+
+
+
+</script>
+
+<div id="my-plugin-content">
+  Loading...
+</div>
+
+</body>
+</html>
